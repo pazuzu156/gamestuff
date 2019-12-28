@@ -1,0 +1,42 @@
+#!/bin/bash
+
+function build_games {
+    mkdir -pv games
+    dotnet run
+    cp /mingw64/bin/glew32.dll games/
+    cp /mingw64/bin/glfw3.dll games/
+}
+
+function clean_all {
+    rm -rf games
+    rm -rf bin
+    rm -rf obj
+}
+
+function show_help {
+    echo "Games build script"
+    echo "  --build, -b - Builds the game files"
+    echo "  --clean, -c - Cleans everything"
+    echo "  --help,  -h - Shows this help message"
+}
+
+for i in "$@"
+do
+    case $i in
+        --build|-b)
+            build_games
+        shift
+        ;;
+        --clean|-c)
+            clean_all
+        shift
+        ;;
+        --help|-h)
+            show_help
+        shift
+        ;;
+        *)
+            echo "Invalid command flag!"
+            exit
+    esac
+done
