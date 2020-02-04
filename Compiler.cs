@@ -14,6 +14,8 @@ namespace games
 
         public Compiler()
         {
+            Console.WriteLine("Beginning build process");
+            
             using (var reader = new StreamReader(File.OpenRead("games.yml"))) {
                 var yaml = new YamlStream();
                 yaml.Load(new StringReader(reader.ReadToEnd()));
@@ -28,25 +30,28 @@ namespace games
                 var title = game.Children[new YamlScalarNode("title")].ToString();
                 var exe = game.Children[new YamlScalarNode("exe")].ToString();
 
-                Console.WriteLine("Compiling {0}", title);
+                if (!File.Exists($"games/{exe}.exe")) {
+                    Console.WriteLine("Compiling {0}", title);
 
-                var lTitle = ToLiteral(title);
-                var argsList = new string[]{
-                    $"-O2 -o games/{exe}.exe src/game.c",
-                    "-I/mingw64/include -L/mingw64/lib",
-                    "-lglew32 -lglfw3 -lopengl32 -lgdi32 -mwindows",
-                    $"-DWINDOW_TITLE=\\\"{lTitle}\\\""
-                };
+                    var lTitle = ToLiteral(title);
+                    var argsList = new string[]{
+                        $"-O2 -o games/{exe}.exe src/game.c",
+                        "-I/mingw64/include -L/mingw64/lib",
+                        "-lglew32 -lglfw3 -lopengl32 -lgdi32 -mwindows",
+                        $"-DWINDOW_TITLE=\\\"{lTitle}\\\""
+                    };
 
-                var psi = new ProcessStartInfo();
-                psi.FileName = @"C:\msys64\mingw64\bin\gcc.exe";
-                psi.Arguments = string.Join(' ', argsList);
-                psi.UseShellExecute = false;
+                    var psi = new ProcessStartInfo();
+                    psi.FileName = @"C:\msys64\mingw64\bin\gcc.exe";
+                    psi.Arguments = string.Join(' ', argsList);
+                    psi.UseShellExecute = false;
 
-                var proc = Process.Start(psi);
-                proc.WaitForExit();
-                Console.WriteLine("Build complete");
+                    var proc = Process.Start(psi);
+                    proc.WaitForExit();
+                }
             }
+
+            Console.WriteLine("Build complete");
 
             return Task.CompletedTask;
         }
