@@ -37,3 +37,5 @@ gamelist:
     exe: skysw
   - title: Super Mario Odyssey (Switch)
     exe: odyssey
+  - title: Uncharted 4
+    exe: unch4
