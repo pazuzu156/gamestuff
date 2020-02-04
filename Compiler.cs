@@ -1,45 +1,51 @@
-using Newtonsoft.Json;
 using System;
-using System.IO;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
+using YamlDotNet.RepresentationModel;
 
 namespace games
 {
     public class Compiler
     {
-        public GamesList games;
+        public YamlSequenceNode games;
 
         public Compiler()
         {
-            using (var reader = new StreamReader(File.OpenRead("games.json"))) {
-                games = JsonConvert.DeserializeObject<GamesList>(reader.ReadToEnd());
+            using (var reader = new StreamReader(File.OpenRead("games.yml"))) {
+                var yaml = new YamlStream();
+                yaml.Load(new StringReader(reader.ReadToEnd()));
+                var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
+                games = (YamlSequenceNode)mapping.Children[new YamlScalarNode("gamelist")];
             }
         }
 
         public Task Build()
         {
-            foreach (var game in games.Games) {
-                Console.WriteLine($"Compiling {game.Title}");
+            foreach (YamlMappingNode game in games) {
+                var title = game.Children[new YamlScalarNode("title")].ToString();
+                var exe = game.Children[new YamlScalarNode("exe")].ToString();
 
-                var title = ToLiteral(game.Title);
+                Console.WriteLine("Compiling {0}", title);
+
+                var lTitle = ToLiteral(title);
                 var argsList = new string[]{
-                    $"-o games/{game.Exe}.exe src/game.c",
+                    $"-O2 -o games/{exe}.exe src/game.c",
                     "-I/mingw64/include -L/mingw64/lib",
-                    "-lglew32 -lglfw3 -lopengl32 -mwindows",
-                    $"-DWINDOW_TITLE=\\\"{title}\\\""
+                    "-lglew32 -lglfw3 -lopengl32 -lgdi32 -mwindows",
+                    $"-DWINDOW_TITLE=\\\"{lTitle}\\\""
                 };
 
-                ProcessStartInfo psi = new ProcessStartInfo();
+                var psi = new ProcessStartInfo();
                 psi.FileName = @"C:\msys64\mingw64\bin\gcc.exe";
                 psi.Arguments = string.Join(' ', argsList);
                 psi.UseShellExecute = false;
 
-                Process p = Process.Start(psi);
-                p.WaitForExit();
-                Console.WriteLine($"Build complete");
+                var proc = Process.Start(psi);
+                proc.WaitForExit();
+                Console.WriteLine("Build complete");
             }
 
             return Task.CompletedTask;
@@ -54,22 +60,6 @@ namespace games
                     return writer.ToString();
                 }
             }
-        }
-
-        [JsonObject]
-        public class GamesList
-        {
-            [JsonProperty("gamelist")]
-            public Game[] Games { get; set; }
-        }
-
-        [JsonObject]
-        public class Game
-        {
-            [JsonProperty("title")]
-            public string Title { get; set; }
-            [JsonProperty("exe")]
-            public string Exe { get; set; }
         }
     }
 }
