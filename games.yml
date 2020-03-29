@@ -1,8 +1,16 @@
 gamelist:
+  - title: A Link Between Worlds
+    exe: albw
   - title: A Link to the Past
     exe: alttp
   - title: Link's Awakening (Switch)
     exe: awakening
+  - title: Baldur's Gate (Switch)
+    exe: bgsw
+  - title: Bravely Default (3DS)
+    exe: brave1
+  - title: Bravely Second (3DS)
+    exe: brave2
   - title: Breath of the Wild (Switch)
     exe: botw
   - title: Dante's Inferno (PS3)
@@ -19,8 +27,16 @@ gamelist:
     exe: doom3sw
   - title: 'Fallout: New Vegas (PS3)'
     exe: fonv
+  - title: Final Fantasy VII (Switch)
+    exe: ffviisw
+  - title: Final Fantasy X/X2 (Switch/PS3)
+    exe: ffxsw
+  - title: 'Jedi Knight: Jedi Academy (Switch)'
+    exe: jedijasw
   - title: 'Jedi Knight II: Jedi Outcast (Switch)'
     exe: jediocsw
+  - title: Luigi's Mansion 3
+    exe: luigim
   - title: Majora's Mask (2DS)
     exe: majora
   - title: 'Metroid: Samus Returns (2DS)'
@@ -37,5 +53,9 @@ gamelist:
     exe: skysw
   - title: Super Mario Odyssey (Switch)
     exe: odyssey
+  - title: 'Uncharted: Nathan Drake Collection'
+    exe: unchcol
   - title: Uncharted 4
     exe: unch4
+  - title: Witcher 3 (Switch)
+    exe: w3sw
