@@ -7,6 +7,8 @@ gamelist:
     exe: awakening
   - title: Baldur's Gate (Switch)
     exe: bgsw
+  - title: Bloodborne
+    exe: bloodborne
   - title: Bravely Default (3DS)
     exe: brave1
   - title: Bravely Second (3DS)
